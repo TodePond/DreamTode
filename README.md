@@ -1,6 +1,6 @@
 # DreamTode
 Some ideas to test out:
-* Brackets ONLY used for grouping together stuff. NOT used for arguments.
+* Parentheses ONLY used for grouping together stuff. NOT used for arguments.
 * Arguments don't need commas or anything - to allow for heavy metaprogramming.
 * The parser can be changed with the `def` keyword.
 * First-class parameters in the form of "patterns".
