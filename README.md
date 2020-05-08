@@ -42,3 +42,9 @@ Map
 let scores = 4, 6, 2, 5
 let doubledScores = map scores {n} => n * 2
 ```
+
+Operator
+```
+def {left, <"add">, right} => left + right
+3 add 2
+```
