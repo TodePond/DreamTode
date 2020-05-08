@@ -13,28 +13,32 @@ let age: UInt8 = 26
 
 Structure
 ```
-let scores: UInt[] = 5, 2, 7, 2
+let scores: UInt8[] = 5, 2, 7, 2
 let luke: Any[] = [name = "Luke", age = 26]
-let args: Any{} = {name: String, age: UInt8}
+let args: Any{} = {name, age}
 ```
 
 Function
 ```
 let add = {left, right} => left + right
-
 add 3 2
 ```
 
-Class
+Struct
 ```
-let makePerson = {name: String, age: UInt8} => [name, age]
-let luke = makePerson "Luke" 26
+let Person = {name: String, age: UInt8}
+let luke = Person "Luke" 26
 ```
 
 Loop
 ```
 let names = "Luke" "Bob" "Tim"
 for names {name} => print "Hi $name!"
-
 for 0 to names.length {i} => print "Hello $(names[i])!"
+```
+
+Map
+```
+let scores = 4, 6, 2, 5
+let doubledScores = map scores {n} => n * 2
 ```
