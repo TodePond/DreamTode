@@ -51,5 +51,6 @@ def {left, <"add">, right} => left + right
 
 Literal
 ```
-def {<"'">, inner: </[^']*/>, <"'">} => "$inner"
+def {<"'">, inner: </[^']*/>, <"'">} => inner
+print 'Hello world!'
 ```
