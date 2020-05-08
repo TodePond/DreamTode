@@ -44,8 +44,13 @@ let age: UInt8 = 26
 Structures
 ```
 let scores: UInt8[] = 5, 2, 7, 2
+scores[0]
+
 let luke: Any[] = [name = "Luke", age = 26]
-let args: Any{} = {name, age}
+luke.name
+
+let Person: Any{} = {name, age}
+new Person "Luke" 26
 ```
 
 Functions
@@ -89,5 +94,12 @@ Compile-Time
 ```
 #print "I print at compile-time"
 @print "I print at run-time"
-print "I also print at run-time (default for the print function)"
+print "I print at run-time (default for the print identifier)"
+```
+```
+let hello = {} => print "Hello world!"
+let foo: #Void = hello
+let bar: @Void = hello
+foo() //compile-time
+bar() //run-time
 ```
