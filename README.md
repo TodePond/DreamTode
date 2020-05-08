@@ -13,7 +13,7 @@ Some ideas to test out:
 * No end-of-line characters, eg: semicolons, commas.
 
 ## Brackets
-Brackets are ALWAYS just grouping together stuff.
+Parentheses are ALWAYS just grouping together stuff.
 ```
 (3 + 5) * 2
 ```
