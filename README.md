@@ -48,3 +48,8 @@ Operator
 def {left, <"add">, right} => left + right
 3 add 2
 ```
+
+Literal
+```
+def {<"'">, inner: </[^']*/>, <"'">} => "$inner"
+```
