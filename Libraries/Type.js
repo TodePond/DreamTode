@@ -25,7 +25,8 @@ Reflect.defineProperty(Object.prototype, "and", {
 			convert: (v) => v.as(type1).as(type2),
 			depth: Math.max(getTypeDepth(type1), getTypeDepth(type2)) + 1,
 		})
-	}
+	},
+	writable: true,
 })
 
 Reflect.defineProperty(Object.prototype, "or", {

@@ -26,10 +26,12 @@ EAT.StringLiteral = EAT.list(
 //=======//
 // Types //
 //=======//
-EAT.Number = EAT.or(
+const Numbers = [
 	EAT.UFloatLiteral,
 	EAT.UIntLiteral,
-)
+]
+
+EAT.Number = EAT.orDynamic(Numbers)
 
 EAT.String = EAT.or(
 	EAT.StringLiteral,
@@ -57,7 +59,6 @@ EAT.ConcatOperation = EAT.InfixOperation(EAT.String, "++", EAT.String)
 // Expressions //
 //=============//
 EAT.Expression = EAT.or(
-	EAT.AddOperation,
 	EAT.SubtractOperation,
 	EAT.MuliplyOperation,
 	EAT.DivideOperation,

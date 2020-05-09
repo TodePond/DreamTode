@@ -76,28 +76,33 @@ const EAT = {}
 		
 	}
 	
-	EAT.or = (...funcs) => (source, ...args) => {
-	
+	EAT.or = (...funcs) => EAT.orDynamic(funcs)
+	EAT.orDynamic = (funcs) => (source, ...args) => {
 		for (const func of funcs) {
-		
-			let result = undefined
-			let success = undefined
-			let code = source
-			
-			result = {success, code} = func(code, ...args)
-			if (success) return result
+			const result = func(source, ...args)
+			if (result.success) return result
 		}
-		
-		const success = false
-		const code = source
-		const snippet = undefined
-		return {success, snippet, code}
+		return EAT.fail(source)
 	}
 	
+	EAT.and = (...funcs) => (source, ...args) => {
+		for (const func of funcs) {
+			const result = func(source, ...args)
+			if (!result.success) return EAT.fail(source)
+		}
+		return EAT.succeed(source)
+	}
+	
+	EAT.not = (func) => (source, ...args) => {
+		const result = func(source, ...args)
+		if (result.success) return EAT.fail(source)
+		else return {...result, success: true}
+	}
 	
 	EAT.endOfFile = (source) => ({success: source.length == 0, snippet: "", code: source})
 	EAT.eof = EAT.endOfFile
 	
+	EAT.succeed = (source) => ({success: true, snippet: undefined, code: source})
 	EAT.fail = (source) => ({success: false, snippet: undefined, code: source})
 	
 	//====================//
