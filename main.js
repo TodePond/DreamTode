@@ -7,8 +7,7 @@ const DreamTode = ([source]) => EAT.list(
 // Literals //
 //==========//
 EAT.UIntLiteral = EAT.list(
-	EAT.regex(/[1-9]/),
-	EAT.maybe(EAT.many(EAT.regex(/[0-9]/))),
+	EAT.many(EAT.regex(/[0-9]/)),
 )
 
 EAT.UFloatLiteral = EAT.list(
@@ -26,12 +25,10 @@ EAT.StringLiteral = EAT.list(
 //=======//
 // Types //
 //=======//
-const Numbers = [
+EAT.Number = EAT.or(
 	EAT.UFloatLiteral,
 	EAT.UIntLiteral,
-]
-
-EAT.Number = EAT.orDynamic(Numbers)
+)
 
 EAT.String = EAT.or(
 	EAT.StringLiteral,
@@ -59,6 +56,7 @@ EAT.ConcatOperation = EAT.InfixOperation(EAT.String, "++", EAT.String)
 // Expressions //
 //=============//
 EAT.Expression = EAT.or(
+	EAT.AddOperation,
 	EAT.SubtractOperation,
 	EAT.MuliplyOperation,
 	EAT.DivideOperation,
