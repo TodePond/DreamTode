@@ -12,28 +12,7 @@ Some ideas to test out:
 * Named constants can NEVER be reassigned. Arrays can mutate.
 * No end-of-line characters, eg: semicolons, commas.
 
-## Brackets
-Parentheses are ALWAYS just grouping together stuff.
-```
-let score = (3 + 5) * 2
-```
-
-Square brackets are ALWAYS an object array literal.
-```
-let luke = [name = "Luke", age = 26]
-```
-
-Brace brackets are ALWAYS a pattern literal.
-```
-let args = {a: Number, b: Number}
-```
-
-You don't need any brackets for arrays.
-```
-let scores = 2, 6, 3, 4
-```
-
-## Stuff
+## Stuff to experiment with
 Constants
 ```
 let name = "Luke"
@@ -107,4 +86,38 @@ let foo: #Void = hello
 let bar: @Void = hello
 foo() //compile-time
 bar() //run-time
+```
+
+## Brackets
+Parentheses are ALWAYS just grouping together stuff.
+```
+let score = (3 + 5) * 2
+```
+
+Square brackets are ALWAYS an object array literal.
+```
+let luke = [name = "Luke", age = 26]
+```
+
+Brace brackets are ALWAYS a pattern literal.
+```
+let args = {a: Number, b: Number}
+```
+
+You don't need any brackets for arrays.
+```
+let scores = 2, 6, 3, 4
+```
+
+## Arguments
+You don't need to write commas or brackets when you call a function.
+```
+print add 3 2
+```
+However, you can still use brackets and stuff to help make your code clearer for the user and the parser.<br>
+Parentheses show that tokens are grouped together.<br>
+Commas show that tokens are an array (in this case, an array of args).<br>
+I think I would write that expression like this:
+```
+print add(3, 2)
 ```
