@@ -16,17 +16,17 @@ const DreamTode = ([source]) => EAT.list(
 //==========//
 // Literals //
 //==========//
-EAT.UIntLiteral = EAT.list(
+EAT.UIntLiteral = EAT.list (
 	EAT.many(EAT.regex(/[0-9]/)),
 )
 
-EAT.UFloatLiteral = EAT.list(
+EAT.UFloatLiteral = EAT.list (
 	EAT.many(EAT.regex(/[0-9]/)),
 	EAT.string("."),
 	EAT.many(EAT.regex(/[0-9]/)),
 )
 
-EAT.StringLiteral = EAT.list(
+EAT.StringLiteral = EAT.list (
 	EAT.string('"'),
 	EAT.maybe(EAT.many(EAT.regex(/[^"]/))), //" this comment fixes my broken syntax highlighter
 	EAT.string('"'),
@@ -35,7 +35,7 @@ EAT.StringLiteral = EAT.list(
 //=======//
 // Types //
 //=======//
-EAT.Number = EAT.or(
+EAT.Number = EAT.or (
 	EAT.ref("AddOperation"),
 	EAT.ref("SubtractOperation"),
 	EAT.ref("MultiplyOperation"),
@@ -45,7 +45,7 @@ EAT.Number = EAT.or(
 	EAT.UIntLiteral,
 )
 
-EAT.String = EAT.or(
+EAT.String = EAT.or (
 	EAT.ref("ConcatOperation"),
 	EAT.StringLiteral,
 )
@@ -53,26 +53,54 @@ EAT.String = EAT.or(
 //===========//
 // Operators //
 //===========//
-EAT.InfixOperation = (name, leftType, symbol, rightType) => EAT.list(
-	EAT.orWithout(EAT.Number, [EAT.ref(name)]),
+EAT.InfixOperation = (leftType, symbol, rightType) => EAT.list (
+	leftType,
 	EAT.maybe(EAT.gap),
 	EAT.string(symbol),
 	EAT.maybe(EAT.gap),
 	rightType,
 )
 
-EAT.AddOperation = EAT.InfixOperation("AddOperation", EAT.Number, "+", EAT.Number)
-EAT.SubtractOperation = EAT.InfixOperation("SubtractOperation", EAT.Number, "-", EAT.Number)
-EAT.MultiplyOperation = EAT.InfixOperation("MultiplyOperation", EAT.Number, "*", EAT.Number)
-EAT.DivideOperation = EAT.InfixOperation("DivideOperation", EAT.Number, "/", EAT.Number)
-EAT.PowerOperation = EAT.InfixOperation("PowerOperation", EAT.Number, "^", EAT.Number)
-EAT.ConcatOperation = EAT.InfixOperation("ConcatOperation", EAT.String, "++", EAT.String)
+EAT.AddOperation = EAT.InfixOperation (
+	EAT.orWithout(EAT.Number, [EAT.ref("AddOperation")]),
+	"+",
+	EAT.Number
+)
+
+EAT.SubtractOperation = EAT.InfixOperation (
+	EAT.orWithout(EAT.Number, [EAT.ref("SubtractOperation")]),
+	"-",
+	EAT.Number
+)
+
+EAT.MultiplyOperation = EAT.InfixOperation (
+	EAT.orWithout(EAT.Number, [EAT.ref("MultiplyOperation")]),
+	"*",
+	EAT.Number
+)
+
+EAT.DivideOperation = EAT.InfixOperation (
+	EAT.orWithout(EAT.Number, [EAT.ref("DivideOperation")]),
+	"/",
+	EAT.Number
+)
+
+EAT.PowerOperation = EAT.InfixOperation (
+	EAT.orWithout(EAT.Number, [EAT.ref("PowerOperation")]),
+	"^",
+	EAT.Number
+)
+
+EAT.ConcatOperation = EAT.InfixOperation (
+	EAT.orWithout(EAT.String, [EAT.ref("ConcatOperation")]),
+	"++",
+	EAT.String
+)
 
 //=============//
 // Expressions //
 //=============//
-EAT.Expression = EAT.or(
+EAT.Expression = EAT.or (
 	EAT.Number,
 	EAT.String,
 )
-
