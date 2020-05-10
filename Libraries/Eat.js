@@ -19,7 +19,7 @@ const EAT = {}
 	//====================//
 	// Control Structures //
 	//====================//
-	EAT.many = (func) => (source, ...args) => {
+	EAT.many = (func) => (source, args) => {
 		
 		// Buffers
 		let success = undefined
@@ -27,25 +27,25 @@ const EAT = {}
 		
 		// Head
 		let headResult = undefined
-		headResult = {success, code} = func(code, ...args)
+		headResult = {success, code} = func(code, args)
 		if (!success) return {...headResult, code: source}
 		
 		// Tail
 		let tailResult = undefined
-		tailResult = {success, code} = EAT.many(func)(code, ...args)
+		tailResult = {success, code} = EAT.many(func)(code, args)
 		if (!success) return headResult
 		tailResult.snippet = headResult.snippet + tailResult.snippet
 		return tailResult
 		
 	}
 	
-	EAT.maybe = (func) => (source, ...args) => {
+	EAT.maybe = (func) => (source, args) => {
 		
 		let result = undefined
 		let success = undefined
 		let code = source
 		
-		result = {success, code} = func(code, ...args)
+		result = {success, code} = func(code, args)
 		if (!success) {
 			result.success = true
 			result.snippet = ""
@@ -54,7 +54,7 @@ const EAT = {}
 		return result
 	}
 	
-	EAT.list = (...funcs) => (source, ...args) => {
+	EAT.list = (...funcs) => (source, args) => {
 		
 		// Buffers
 		let success = undefined
@@ -63,41 +63,56 @@ const EAT = {}
 		// Head
 		let headResult = undefined
 		const headFunc = funcs[0]
-		headResult = {success, code} = headFunc(code, ...args)
+		headResult = {success, code} = headFunc(code, args)
 		if (!success) return {...headResult, code: source}
 		
 		// Tail
 		let tailResult = undefined
 		const tailFuncs = funcs.slice(1)
 		if (tailFuncs.length == 0) return headResult
-		tailResult = {success, code} = EAT.list(...tailFuncs)(code, ...args)
+		tailResult = {success, code} = EAT.list(...tailFuncs)(code, args)
 		tailResult.snippet = headResult.snippet + tailResult.snippet
 		return tailResult
 		
 	}
 	
 	EAT.or = (...funcs) => EAT.orDynamic(funcs)
-	EAT.orDynamic = (funcs) => (source, ...args) => {
+	EAT.orDynamic = (funcs) => (source, args = {without: []}) => {
+		const {without} = args
 		for (const func of funcs) {
-			const result = func(source, ...args)
+			if (without.includes(func)) continue
+			const result = func(source, args)
 			if (result.success) return result
 		}
 		return EAT.fail(source)
 	}
 	
-	EAT.and = (...funcs) => (source, ...args) => {
+	EAT.orWithout = (orFunc, without) => (source, args) => {
+		return orFunc(source, {...args, without: [...args.without, ...without]})
+	}
+	
+	EAT.and = (...funcs) => (source, args) => {
 		for (const func of funcs) {
-			const result = func(source, ...args)
+			const result = func(source, args)
 			if (!result.success) return EAT.fail(source)
 		}
 		return EAT.succeed(source)
 	}
 	
-	EAT.not = (func) => (source, ...args) => {
-		const result = func(source, ...args)
+	EAT.not = (func) => (source, args) => {
+		const result = func(source, args)
 		if (result.success) return EAT.fail(source)
 		else return {...result, success: true}
 	}
+	
+	const referenceCache = {}
+	EAT.reference = (funcName) => {
+		if (referenceCache[funcName] != undefined) return referenceCache[funcName]
+		const func = (source, args) => EAT[funcName](source, args)
+		referenceCache[funcName] = func
+		return func
+	}
+	EAT.ref = EAT.reference
 	
 	EAT.endOfFile = (source) => ({success: source.length == 0, snippet: "", code: source})
 	EAT.eof = EAT.endOfFile

@@ -1,5 +1,7 @@
 const DreamTode = ([source]) => EAT.list(
+	EAT.maybe(EAT.whitespace),
 	EAT.Expression,
+	EAT.maybe(EAT.whitespace),
 	EAT.endOfFile,
 )(source)
 
@@ -26,42 +28,42 @@ EAT.StringLiteral = EAT.list(
 // Types //
 //=======//
 EAT.Number = EAT.or(
+	EAT.ref("AddOperation"),
+	EAT.ref("SubtractOperation"),
+	EAT.ref("MultiplyOperation"),
+	EAT.ref("DivideOperation"),
+	EAT.ref("PowerOperation"),
 	EAT.UFloatLiteral,
 	EAT.UIntLiteral,
 )
 
 EAT.String = EAT.or(
+	EAT.ref("ConcatOperation"),
 	EAT.StringLiteral,
 )
 
 //===========//
 // Operators //
 //===========//
-EAT.InfixOperation = (leftType, symbol, rightType) => EAT.list(
-	leftType,
+EAT.InfixOperation = (name, leftType, symbol, rightType) => EAT.list(
+	EAT.orWithout(EAT.Number, [EAT.ref(name)]),
 	EAT.maybe(EAT.gap),
 	EAT.string(symbol),
 	EAT.maybe(EAT.gap),
 	rightType,
 )
 
-EAT.AddOperation = EAT.InfixOperation(EAT.Number, "+", EAT.Number)
-EAT.SubtractOperation = EAT.InfixOperation(EAT.Number, "-", EAT.Number)
-EAT.MuliplyOperation = EAT.InfixOperation(EAT.Number, "*", EAT.Number)
-EAT.DivideOperation = EAT.InfixOperation(EAT.Number, "/", EAT.Number)
-EAT.PowerOperation = EAT.InfixOperation(EAT.Number, "^", EAT.Number)
-EAT.ConcatOperation = EAT.InfixOperation(EAT.String, "++", EAT.String)
+EAT.AddOperation = EAT.InfixOperation("AddOperation", EAT.Number, "+", EAT.Number)
+EAT.SubtractOperation = EAT.InfixOperation("SubtractOperation", EAT.Number, "-", EAT.Number)
+EAT.MultiplyOperation = EAT.InfixOperation("MultiplyOperation", EAT.Number, "*", EAT.Number)
+EAT.DivideOperation = EAT.InfixOperation("DivideOperation", EAT.Number, "/", EAT.Number)
+EAT.PowerOperation = EAT.InfixOperation("PowerOperation", EAT.Number, "^", EAT.Number)
+EAT.ConcatOperation = EAT.InfixOperation("ConcatOperation", EAT.String, "++", EAT.String)
 
 //=============//
 // Expressions //
 //=============//
 EAT.Expression = EAT.or(
-	EAT.AddOperation,
-	EAT.SubtractOperation,
-	EAT.MuliplyOperation,
-	EAT.DivideOperation,
-	EAT.PowerOperation,
-	EAT.ConcatOperation,
 	EAT.Number,
 	EAT.String,
 )
