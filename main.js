@@ -61,41 +61,12 @@ EAT.InfixOperation = (leftType, symbol, rightType) => EAT.list (
 	rightType,
 )
 
-EAT.AddOperation = EAT.InfixOperation (
-	EAT.orWithout(EAT.Number, [EAT.ref("AddOperation")]),
-	"+",
-	EAT.Number
-)
-
-EAT.SubtractOperation = EAT.InfixOperation (
-	EAT.orWithout(EAT.Number, [EAT.ref("SubtractOperation")]),
-	"-",
-	EAT.Number
-)
-
-EAT.MultiplyOperation = EAT.InfixOperation (
-	EAT.orWithout(EAT.Number, [EAT.ref("MultiplyOperation")]),
-	"*",
-	EAT.Number
-)
-
-EAT.DivideOperation = EAT.InfixOperation (
-	EAT.orWithout(EAT.Number, [EAT.ref("DivideOperation")]),
-	"/",
-	EAT.Number
-)
-
-EAT.PowerOperation = EAT.InfixOperation (
-	EAT.orWithout(EAT.Number, [EAT.ref("PowerOperation")]),
-	"^",
-	EAT.Number
-)
-
-EAT.ConcatOperation = EAT.InfixOperation (
-	EAT.orWithout(EAT.String, [EAT.ref("ConcatOperation")]),
-	"++",
-	EAT.String
-)
+EAT.AddOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("AddOperation")]), "+", EAT.Number)
+EAT.SubtractOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("SubtractOperation")]), "-", EAT.Number)
+EAT.MultiplyOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("MultiplyOperation")]), "*", EAT.Number)
+EAT.DivideOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("DivideOperation")]), "/", EAT.Number)
+EAT.PowerOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("PowerOperation")]), "^", EAT.Number)
+EAT.ConcatOperation = EAT.InfixOperation(EAT.orWithout(EAT.String, [EAT.ref("ConcatOperation")]), "++", EAT.String)
 
 //=============//
 // Expressions //
