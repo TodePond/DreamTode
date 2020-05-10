@@ -15,17 +15,22 @@ Some ideas to test out:
 ## Brackets
 Parentheses are ALWAYS just grouping together stuff.
 ```
-(3 + 5) * 2
+let score = (3 + 5) * 2
 ```
 
 Square brackets are ALWAYS an object array literal.
 ```
-[name = "Luke", age = 26]
+let luke = [name = "Luke", age = 26]
 ```
 
 Brace brackets are ALWAYS a pattern literal.
 ```
-{a: Number, b: Number}
+let args = {a: Number, b: Number}
+```
+
+You don't need any brackets for arrays.
+```
+let scores = 2, 6, 3, 4
 ```
 
 ## Stuff
