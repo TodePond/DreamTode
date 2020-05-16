@@ -13,6 +13,15 @@ const DreamTode = ([source]) => EAT.list(
 	EAT.endOfFile,
 )(source)
 
+//=============//
+// Expressions //
+//=============//
+EAT.Expression = EAT.or (
+	EAT.ref("Number"),
+	EAT.ref("String"),
+	EAT.ref("Void"),
+)
+
 //==========//
 // Literals //
 //==========//
@@ -32,6 +41,17 @@ EAT.StringLiteral = EAT.list (
 	EAT.string('"'),
 )
 
+//==========//
+// Grouping //
+//==========//
+EAT.Group = (type) => EAT.list (
+	EAT.string("("),
+	EAT.maybe(EAT.gap),
+	type,
+	EAT.maybe(EAT.gap),
+	EAT.string(")"),
+)
+
 //=======//
 // Types //
 //=======//
@@ -43,11 +63,18 @@ EAT.Number = EAT.or (
 	EAT.ref("PowerOperation"),
 	EAT.UFloatLiteral,
 	EAT.UIntLiteral,
+	EAT.Group(EAT.ref("Number")),
 )
 
 EAT.String = EAT.or (
 	EAT.ref("ConcatOperation"),
 	EAT.StringLiteral,
+	EAT.Group(EAT.ref("String")),
+)
+
+EAT.Void = EAT.or (
+	EAT.ref("PrintFunction"),
+	EAT.Group(EAT.ref("Void")),
 )
 
 //===========//
@@ -68,10 +95,11 @@ EAT.DivideOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("Div
 EAT.PowerOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("PowerOperation")]), "^", EAT.Number)
 EAT.ConcatOperation = EAT.InfixOperation(EAT.orWithout(EAT.String, [EAT.ref("ConcatOperation")]), "++", EAT.String)
 
-//=============//
-// Expressions //
-//=============//
-EAT.Expression = EAT.or (
-	EAT.Number,
-	EAT.String,
+//===========//
+// Functions //
+//===========//
+EAT.PrintFunction = EAT.list (
+	EAT.string("print"),
+	EAT.maybe(EAT.gap),
+	EAT.Expression,
 )
