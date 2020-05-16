@@ -216,13 +216,6 @@ const EAT = {}
 		)
 	)
 	
-	EAT.emptyLine = EAT.list (
-		EAT.maybe(EAT.gap),
-		EAT.newline,
-	)
-	
-	EAT.emptyLines = EAT.many(EAT.emptyLine)
-	
 	EAT.name = EAT.list (
 		EAT.regexp(/[a-zA-Z_$]/),
 		EAT.many(EAT.regex(/[a-zA-Z0-9_$]/))
