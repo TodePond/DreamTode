@@ -87,29 +87,35 @@ EAT.Void = EAT.or (
 //===========//
 // Operators //
 //===========//
-EAT.InfixOperation = (leftType, symbol, rightType) => EAT.list (
-	leftType,
+EAT.Operation = (leftType, symbol, rightType, without = []) => EAT.list (
+	EAT.without(leftType, without),
 	EAT.maybe(EAT.gap),
 	EAT.string(symbol),
 	EAT.maybe(EAT.gap),
 	rightType,
 )
 
-EAT.MultiLineOperation = EAT.InfixOperation(EAT.orWithout(EAT.Expression, [EAT.ref("MultiLineOperation")]), "\n", EAT.Expression)
-EAT.ArrayOperation = EAT.InfixOperation(EAT.orWithout(EAT.Expression, [EAT.ref("ArrayOperation")]), ",", EAT.Expression)
+// Array
+EAT.MultiLineOperation = EAT.Operation(EAT.Expression, "\n", EAT.Expression, [EAT.ref("MultiLineOperation")])
+EAT.ArrayOperation = EAT.Operation(EAT.Expression, ",", EAT.Expression, [EAT.ref("ArrayOperation")])
 
-EAT.AddOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("AddOperation")]), "+", EAT.Number)
-EAT.SubtractOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("SubtractOperation")]), "-", EAT.Number)
-EAT.MultiplyOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("MultiplyOperation")]), "*", EAT.Number)
-EAT.DivideOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("DivideOperation")]), "/", EAT.Number)
-EAT.PowerOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("PowerOperation")]), "^", EAT.Number)
-EAT.ConcatOperation = EAT.InfixOperation(EAT.orWithout(EAT.String, [EAT.ref("ConcatOperation")]), "++", EAT.String)
+// Number
+EAT.AddOperation = EAT.Operation(EAT.Number, "+", EAT.Number, [EAT.ref("AddOperation")])
+EAT.SubtractOperation = EAT.Operation(EAT.Number, "-", EAT.Number, [EAT.ref("SubtractOperation")])
+EAT.MultiplyOperation = EAT.Operation(EAT.Number, "*", EAT.Number, [EAT.ref("MultiplyOperation")])
+EAT.DivideOperation = EAT.Operation(EAT.Number, "/", EAT.Number, [EAT.ref("DivideOperation")])
+EAT.PowerOperation = EAT.Operation(EAT.Number, "^", EAT.Number, [EAT.ref("PowerOperation")])
+
+// String
+EAT.ConcatOperation = EAT.Operation(EAT.String, "++", EAT.String, [EAT.ref("ConcatOperation")])
 
 //===========//
 // Functions //
 //===========//
-EAT.PrintFunction = EAT.list (
-	EAT.string("print"),
+EAT.Function = (name, arg) => EAT.list (
+	EAT.string(name),
 	EAT.maybe(EAT.gap),
-	EAT.Expression,
+	arg,
 )
+
+EAT.PrintFunction = EAT.Function("print", EAT.Expression)

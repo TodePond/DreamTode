@@ -87,8 +87,8 @@ const EAT = {}
 		return EAT.fail(source)
 	}
 	
-	EAT.orWithout = (orFunc, without) => (source, args) => {
-		return orFunc(source, {...args, without: [...args.without, ...without]})
+	EAT.without = (func, without) => (source, args) => {
+		return func(source, {...args, without: [...args.without, ...without]})
 	}
 	
 	EAT.and = (...funcs) => (source, args) => {
