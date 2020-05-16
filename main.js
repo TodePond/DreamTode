@@ -6,9 +6,9 @@
 //   |____/|_|  \___|\__,_|_| |_| |_|_|\___/ \__,_|\___|  //
 //                                                        //
 //========================================================//
-const DreamTode = ([source]) => EAT.list(
+const DreamTode = ([source]) => EAT.list (
 	EAT.maybe(EAT.whitespace),
-	EAT.Expression,
+	EAT.maybe(EAT.Expression),
 	EAT.maybe(EAT.whitespace),
 	EAT.endOfFile,
 )(source)
@@ -17,6 +17,7 @@ const DreamTode = ([source]) => EAT.list(
 // Expressions //
 //=============//
 EAT.Expression = EAT.or (
+	EAT.ref("Array"),
 	EAT.ref("Number"),
 	EAT.ref("String"),
 	EAT.ref("Void"),
@@ -46,15 +47,21 @@ EAT.StringLiteral = EAT.list (
 //==========//
 EAT.Group = (type) => EAT.list (
 	EAT.string("("),
-	EAT.maybe(EAT.gap),
+	EAT.maybe(EAT.whitespace),
 	type,
-	EAT.maybe(EAT.gap),
+	EAT.maybe(EAT.whitespace),
 	EAT.string(")"),
 )
 
 //=======//
 // Types //
 //=======//
+EAT.Array = EAT.or (
+	EAT.ref("MultiLineOperation"),
+	EAT.ref("ArrayOperation"),
+	EAT.Group(EAT.ref("Array")),
+)
+
 EAT.Number = EAT.or (
 	EAT.ref("AddOperation"),
 	EAT.ref("SubtractOperation"),
@@ -87,6 +94,9 @@ EAT.InfixOperation = (leftType, symbol, rightType) => EAT.list (
 	EAT.maybe(EAT.gap),
 	rightType,
 )
+
+EAT.MultiLineOperation = EAT.InfixOperation(EAT.orWithout(EAT.Expression, [EAT.ref("MultiLineOperation")]), "\n", EAT.Expression)
+EAT.ArrayOperation = EAT.InfixOperation(EAT.orWithout(EAT.Expression, [EAT.ref("ArrayOperation")]), ",", EAT.Expression)
 
 EAT.AddOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("AddOperation")]), "+", EAT.Number)
 EAT.SubtractOperation = EAT.InfixOperation(EAT.orWithout(EAT.Number, [EAT.ref("SubtractOperation")]), "-", EAT.Number)
