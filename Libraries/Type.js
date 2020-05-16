@@ -57,6 +57,30 @@ class Type {
 	}
 }
 
+{
+
+	Array.check = (v) => v instanceof Array
+	
+	ofSymbol = Symbol("of")
+	Array[ofSymbol] = new Map()
+	Array.of = (type) => {
+		const entry = Array[ofSymbol].get(type)
+		if (entry !== undefined) return entry
+		const arrayType = new Type ({
+			name: `${type.name}[]`,
+			check: (v) => {
+				if (!v.is(Array)) return false
+				if (v.some(e => !e.is(type))) return false
+				return true
+			},
+		})
+		Array[ofSymbol].set(type, arrayType)
+		return arrayType
+	}
+	
+	Array.of(String)
+}
+
 const Any = new Type({
 	name: "Any",
 	check: (a) => true,
