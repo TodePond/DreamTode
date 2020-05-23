@@ -76,16 +76,24 @@ print 'Hello world!'
 
 Compile-Time
 ```
+print "I print at run-time"
 #print "I print at compile-time"
-@print "I print at run-time"
-print "I print at run-time (default for the print identifier)"
+
+print 2 + 3 //run-time calculation
+print #(2 + 3) //compile-time calculation
 ```
+
+References
 ```
-let hello = {} => print "Hello world!"
-let foo: #Void = hello
-let bar: @Void = hello
-foo() //compile-time
-bar() //run-time
+let bob = [name = "Bob", age = 24]
+let age = bob.age
+bob.age = 25
+print age //24
+
+let luke = [name = "Luke", age = 26]
+let age = @luke.age
+luke.age = 27
+print age //27
 ```
 
 ## Brackets
