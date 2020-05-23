@@ -47,6 +47,9 @@ let Sand = new Element [
 	categories = "Sandbox"
 	colour = "#FC0"
 	behave = {atom, space} => (
-		if space.below.atom.element == Empty
+		if space.below.atom.element == Empty (
+			space.atom = space.below.atom
+			space.below.atom = atom
+		)
 	)
 ]
