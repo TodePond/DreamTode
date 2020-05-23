@@ -91,7 +91,7 @@ bob.age = 25
 print age //24
 
 let luke = [name = "Luke", age = 26]
-let age = @luke.age
+let age = @(luke.age)
 luke.age = 27
 print age //27
 ```
