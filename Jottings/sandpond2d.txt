@@ -83,7 +83,7 @@ let drawSpace = {element, x, y} => (
 )
 
 let render = {} => (
-	for {x, y} in spacesReversed => (
+	for {x, y} in spacesReversed (
 		let space = spaces[x][y]
 		let atom = space.atom
 		let element = space.atom.element
