@@ -17,12 +17,12 @@ let Element = {
 }
 
 let Atom = {
-	element: @Element = @Empty
+	element: &Element = &Empty
 }
 
 let Space = {
 	atom: Atom = new Atom()
-	below: @Space
+	below: &Space
 }
 
 //==========//
@@ -51,12 +51,12 @@ let Sand = new Element [
 let spaces = new Space[WORLD_WIDTH][WORLD_HEIGHT]()
 for {x, y} in spaces (
 	if y+1 >= WORLD_HEIGHT, continue
-	spaces[x][y].below = @(spaces[x][y+1])
+	spaces[x][y].below = &(spaces[x][y+1])
 )
 
 let spacesReversed: (@Space)[WORLD_WIDTH][WORLD_HEIGHT]
 for {x, y} in spacesReversed (
-	spacesReversed[x][y] = @(spaces[x][WORLD_HEIGHT - y])
+	spacesReversed[x][y] = &(spaces[x][WORLD_HEIGHT - y])
 )
 
 //===========//
