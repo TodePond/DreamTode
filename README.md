@@ -34,7 +34,7 @@ let luke: Any[] = [name = "Luke", age = 26]
 luke.name
 
 let Person: Any{} = {name, age}
-new Person "Luke" 26
+new Person "Luke", 26
 ```
 
 Functions
@@ -46,14 +46,23 @@ add 3 2
 Structs
 ```
 let Person = {name: String, age: UInt8}
-let luke = new Person "Luke" 26
+let luke = new Person "Luke", 26
+```
+
+Conditions
+```
+let age = 26
+if age >= 18, print "You are an adult!"
 ```
 
 Loops
 ```
 let names = "Luke" "Bob" "Tim"
-for names {name} => print "Hi $name!"
-for 0 to names.length {i} => print "Hello $(names[i])!"
+for {name} of names, print "Hello $name!"
+for {i} in names, print "Hello $(names[i])!"
+```
+```
+loop names {name} => print "Hello $name!"
 ```
 
 Maps
@@ -93,7 +102,7 @@ bob.age = 25
 print age //24
 
 let luke = [name = "Luke", age = 26]
-let age = &(luke.age)
+let age = &luke.age
 luke.age = 27
 print age //27
 ```
@@ -104,7 +113,12 @@ Parentheses are ALWAYS just grouping together stuff.
 let score = (3 + 5) * 2
 ```
 
-Square brackets are ALWAYS an object array literal.
+You don't need any brackets for arrays.
+```
+let scores = 2, 6, 3, 4
+```
+
+Square brackets are ALWAYS an array (with named properties).
 ```
 let luke = [name = "Luke", age = 26]
 ```
@@ -112,11 +126,6 @@ let luke = [name = "Luke", age = 26]
 Brace brackets are ALWAYS a pattern literal.
 ```
 let args = {a: Number, b: Number}
-```
-
-You don't need any brackets for arrays.
-```
-let scores = 2, 6, 3, 4
 ```
 
 ## Arguments
@@ -131,3 +140,5 @@ I think I would write that expression like this:
 ```
 print add(3, 2)
 ```
+
+In this case, the commas show that `3` and `2` are in an array together. It shows that `2` is not being applied to `3` as an argument, like `3(2)`. In this case, the compiler knows this anyway.
