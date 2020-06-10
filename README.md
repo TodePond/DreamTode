@@ -40,7 +40,7 @@ new Person "Luke", 26
 Functions
 ```
 let add = {left, right} => left + right
-add 3 2
+add 3, 2
 ```
 
 Structs
@@ -62,13 +62,13 @@ for {name} of names, print "Hello $name!"
 for {i} in names, print "Hello $(names[i])!"
 ```
 ```
-loop names {name} => print "Hello $name!"
+loop names, {name} => print "Hello $name!"
 ```
 
 Maps
 ```
 let scores = 4, 6, 2, 5
-let doubledScores = map scores {n} => n * 2
+let doubledScores = map scores, {n} => n * 2
 ```
 
 Operators
@@ -129,16 +129,12 @@ let args = {a: Number, b: Number}
 ```
 
 ## Arguments
-You don't need to write commas or brackets when you call a function.
+You don't need to write brackets when you call a function.
 ```
-print add 3 2
+print add 3, 2
 ```
-However, you can still use brackets and stuff to help make your code clearer for the user and the parser.<br>
-Parentheses show that tokens are grouped together.<br>
-Commas show that tokens are an array (in this case, an array of args).<br>
+However, you can still use brackets to help make your code clearer for the user and the parser.<br>
 I think I would write that expression like this:
 ```
 print add(3, 2)
 ```
-
-In this case, the commas show that `3` and `2` are in an array together. It shows that `2` is not being applied to `3` as an argument, like `3(2)`. In this case, the compiler knows this anyway.
