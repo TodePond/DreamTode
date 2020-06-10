@@ -1,14 +1,12 @@
 # DreamTode
 Some ideas to test out:
 * Parentheses ONLY used for grouping together stuff. NOT used for arguments.
-* Arguments don't need commas or anything - to allow for heavy metaprogramming.
 * The parser can be changed with the `def` keyword.
 * First-class parameters in the form of "patterns".
 * You can write some horrific-looking code with DreamTode and that's ok.
 * You can choose when a function gets done: run-time or compile-time.
 * NO constructors and methods. Just use functions.
 * Arrays and Objects are the same thing, but there are still two different literals to help you write them.
-* Optional typing is 100% for optimization reasons. NOT for readability/safety.
 * Named constants can NEVER be reassigned. Arrays can mutate.
 * No end-of-line characters, eg: semicolons, commas.
 
