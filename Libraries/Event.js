@@ -19,6 +19,15 @@ if (this.Element) {
 		},
 	})
 
+	// TODO: make this work with other stuff - not just NodeList
+	Reflect.defineProperty(NodeList.prototype, "onPassive", {
+		get() {
+			return new Proxy(this, {
+				get: (nodelist, eventName, callback) => (callback) => nodelist.forEach(element => element.addEventListener(eventName, callback, {passive: true})),
+			})
+		},
+	})
+
 	Reflect.defineProperty(window, "on", {
 		get() {
 			return new Proxy(this, {
@@ -73,6 +82,7 @@ if (this.Element) {
 		},
 	})
 	
+	// TODO: I don't think this works for NodeList
 	Reflect.defineProperty(Object.prototype, "when", {
 		get() {
 			return new Proxy(this, {
