@@ -1,4 +1,4 @@
-
+/*
 print(DreamTode`print "hi"`)
 print(DreamTode`25.0 + 2 - 302`)
 print(DreamTode`"ho" ++ "ho" ++ "ho"`)
@@ -18,4 +18,4 @@ print(DreamTode`
 		"an"
 		"array"
 	)
-`)
+`)*/
