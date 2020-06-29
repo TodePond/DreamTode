@@ -11,9 +11,6 @@
 // 'code'
 // the rest of the code (with the desired thing removed)
 //
-// 'output'
-// the generated code
-//
 
 const EAT = {}
 
@@ -166,8 +163,8 @@ const EAT = {}
 	EAT.endOfFile = (source) => ({success: source.length == 0, snippet: "", code: source})
 	EAT.eof = EAT.endOfFile
 	
-	EAT.succeed = (source) => ({success: true, snippet: undefined, code: source, output: undefined})
-	EAT.fail = (source) => ({success: false, snippet: undefined, code: source, output: undefined})
+	EAT.succeed = (source) => ({success: true, snippet: undefined, code: source})
+	EAT.fail = (source) => ({success: false, snippet: undefined, code: source})
 	
 	//====================//
 	// In-Built Functions //
