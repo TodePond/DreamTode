@@ -59,6 +59,7 @@
 		DATA: CODE.make("Section.Data", 11),
 	}
 	
+	// http://webassembly.github.io/spec/core/binary/modules.html#export-section
 	const EXPORT = {
 		FUNCTION: CODE.make("Export.Function", 0x00),
 		TABLE: CODE.make("Export.Table", 0x01),
@@ -115,6 +116,12 @@
 		CODE.make("ID", id)
 	]
 	
+	ENCODE.codeItem = (locals, instructions) => ENCODE.vector([
+		...ENCODE.vector(locals).map(n => CODE.make("Local", n)),
+		...instructions,
+		INSTRUCTION.END,
+	])
+	
 	//======//
 	// WASM //
 	//======//
@@ -135,20 +142,32 @@
 			[ENCODE.exportItem("add", EXPORT.FUNCTION, 0x00)],
 		)
 		
+		const codeSection = ENCODE.section(
+			SECTION.CODE,
+			[ENCODE.codeItem([], [
+				INSTRUCTION.GET_LOCAL,
+				...ENCODE.unsignedLEB128(0),
+				INSTRUCTION.GET_LOCAL,
+				...ENCODE.unsignedLEB128(1),
+				INSTRUCTION.F32_ADD,
+			])]
+		)
+		
 		const codes = [
 			HEADER,
 			VERSION,
 			...typeSection,
 			...funcSection,
 			...exportSection,
-		].d
+			...codeSection
+		]
 		
 		const numbers = CODE.generate(codes)
 		return Uint8Array.from(numbers)
 	}
 	
 	const wasm = WASM()
-	WebAssembly.instantiate(wasm).then(instance => instance)
+	WebAssembly.instantiate(wasm).then(instance => window.WASM = instance.instance.exports)
 	
 }
 
