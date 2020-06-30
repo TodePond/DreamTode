@@ -24,19 +24,20 @@
 	const VERSION = CODE.make("Version", ASCII("\1\0\0\0"))
 	
 	// https://webassembly.github.io/spec/core/binary/instructions.html
-	const INSTRUCTION = {
+	INSTRUCTION = {
 		END: CODE.make("Instruction.end", 0x0b),
 		GET_LOCAL: CODE.make("Instruction.get_local", 0x20),
 		F32_ADD: CODE.make("Instruction.f32_add", 0x92),
+		F32_SUB: CODE.make("Instruction.f32_sub", 0x93),
 	}
 	
 	// https://webassembly.github.io/spec/core/binary/types.html#binary-functype
-	const FUNCTION = {
+	FUNCTION = {
 		SINGLE_RESULT: CODE.make("Function.SingleResult", 0x60),
 	}
 	
 	// https://webassembly.github.io/spec/core/binary/types.html#value-types
-	const VALUE = {
+	VALUE = {
 		I32: CODE.make("Value.i32", 0x7F),
 		I64: CODE.make("Value.i64", 0x7E),
 		F32: CODE.make("Value.f32", 0x7D),
@@ -44,7 +45,7 @@
 	}
 	
 	// https://webassembly.github.io/spec/core/binary/modules.html#sections
-	const SECTION = {
+	SECTION = {
 		CUSTOM: CODE.make("Section.Custom", 0),
 		TYPE: CODE.make("Section.Type", 1),
 		IMPORT: CODE.make("Section.Import", 2),
@@ -60,7 +61,7 @@
 	}
 	
 	// http://webassembly.github.io/spec/core/binary/modules.html#export-section
-	const EXPORT = {
+	EXPORT = {
 		FUNCTION: CODE.make("Export.Function", 0x00),
 		TABLE: CODE.make("Export.Table", 0x01),
 		MEMORY: CODE.make("Export.Memory", 0x02),
@@ -125,11 +126,11 @@
 	//======//
 	// WASM //
 	//======//
-	const WASM = () => {
+	WASM = async (func) => {
 		
 		const typeSection = ENCODE.section(
 			SECTION.TYPE,
-			[ENCODE.typeItem(FUNCTION.SINGLE_RESULT, [VALUE.F32, VALUE.F32], [VALUE.F32])],
+			[ENCODE.typeItem(FUNCTION.SINGLE_RESULT, func.paramTypes, [func.resultType])],
 		)
 		
 		const funcSection = ENCODE.section(
@@ -139,18 +140,12 @@
 		
 		const exportSection = ENCODE.section(
 			SECTION.EXPORT,
-			[ENCODE.exportItem("add", EXPORT.FUNCTION, 0x00)],
+			[ENCODE.exportItem("func", EXPORT.FUNCTION, 0x00)],
 		)
 		
 		const codeSection = ENCODE.section(
 			SECTION.CODE,
-			[ENCODE.codeItem([], [
-				INSTRUCTION.GET_LOCAL,
-				...ENCODE.unsignedLEB128(0),
-				INSTRUCTION.GET_LOCAL,
-				...ENCODE.unsignedLEB128(1),
-				INSTRUCTION.F32_ADD,
-			])]
+			[ENCODE.codeItem([], func.instructions)]
 		)
 		
 		const codes = [
@@ -163,11 +158,28 @@
 		]
 		
 		const numbers = CODE.generate(codes)
-		return Uint8Array.from(numbers)
+		const wasm = Uint8Array.from(numbers)
+		
+		const module = await WebAssembly.instantiate(wasm)
+		return module.instance.exports.func
 	}
 	
-	const wasm = WASM()
-	WebAssembly.instantiate(wasm).then(instance => window.WASM = instance.instance.exports)
+	//===========//
+	// Functions //
+	//===========//
+	FUNCTION.make = ({paramTypes, resultType, instructions}) => ({paramTypes, resultType, instructions})
+	
+	const addFunction = FUNCTION.make({
+		paramTypes: [VALUE.F32, VALUE.F32],
+		resultType: VALUE.F32,
+		instructions: [
+			INSTRUCTION.GET_LOCAL, 0,
+			INSTRUCTION.GET_LOCAL, 1,
+			INSTRUCTION.F32_ADD,
+		],
+	})
+	
+	const wasm = WASM(addFunction).then(func => add = func)
 	
 }
 
