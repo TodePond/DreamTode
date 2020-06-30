@@ -66,9 +66,9 @@
 		GLOBAL: CODE.make("Export.Global", 0x03),
 	}
 	
-	//========//
-	// Encode //
-	//========//
+	//==================//
+	// Encode - General //
+	//==================//
 	const ENCODE = {}
 		
 	ENCODE.unsignedLEB128 = (n) => {
@@ -76,69 +76,63 @@
 		do {
 			let byte = n & 0x7f
 			n >>>= 7
-			if (n !== 0) {
-				byte |= 0x80
-			}
+			if (n !== 0) byte |= 0x80
 			buffer.push(byte)
 		} while (n !== 0)
 		return buffer
 	}
-	const flatten = (arr) => [].concat.apply([], arr)
+	
 	ENCODE.vector = (array) => [
-		...ENCODE.unsignedLEB128(array.length),
-		...flatten(array),
+		...ENCODE.unsignedLEB128(array.length),//.map(n => CODE.make("Vector", n)),
+		...array.flat(),
 	]
 	
-	ENCODE.string = (string) => ENCODE.vector(ASCII(string).map(c => CODE.make(String.fromCharCode(c), c)))
-	ENCODE.section = (type, array) => [
+	ENCODE.string = (string) => ENCODE.vector(
+		string.split("").map( c => CODE.make(`'${c}'`, c.charCodeAt()) )
+	)
+	
+	ENCODE.section = (type, items) => [
 		type,
-		...ENCODE.vector(ENCODE.vector(array)),
+		...ENCODE.vector(ENCODE.vector(items)),
 	]
 	
-	ENCODE.functionType = (type, paramTypes, resultTypes) => [
+	//========================//
+	// Encode - Section Items //
+	//========================//
+	ENCODE.typeItem = (type, paramTypes, resultTypes) => [
 		type,
 		...ENCODE.vector(paramTypes),
 		...ENCODE.vector(resultTypes),
 	]
 	
-	ENCODE.export = (name, type, id) => [
+	ENCODE.exportItem = (name, type, id) => [
 		...ENCODE.string(name),
 		type,
 		CODE.make("ID", id)
 	]
 	
-	ENCODE.function = (id) => [
+	ENCODE.functionItem = (id) => [
 		CODE.make("ID", id)
 	]
-	
-	//=====//
-	// Lib //
-	//=====//
-	const addFunctionType = ENCODE.functionType(
-		FUNCTION.SINGLE_RESULT,
-		[VALUE.F32, VALUE.F32],
-		[VALUE.F32],
-	)
 	
 	//======//
 	// WASM //
 	//======//
-	
 	const WASM = () => {
 		
 		const typeSection = ENCODE.section(
 			SECTION.TYPE,
-			[addFunctionType],
+			[ENCODE.typeItem(FUNCTION.SINGLE_RESULT, [VALUE.F32, VALUE.F32], [VALUE.F32])],
 		)
 		
 		const funcSection = ENCODE.section(
 			SECTION.FUNCTION,
-			[ENCODE.function(0x00)]
+			[ENCODE.functionItem(0x00)]
 		)
 		
 		const exportSection = ENCODE.section(
 			SECTION.EXPORT,
-			[ENCODE.export("run", EXPORT.FUNCTION, 0x00)],
+			[ENCODE.exportItem("add", EXPORT.FUNCTION, 0x00)],
 		)
 		
 		const codes = [
