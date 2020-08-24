@@ -10,7 +10,7 @@ Some ideas to test out:
 * Arrays and Objects are the same thing, but there are still two different literals to help you write them.
 * No variables. Only constants. Arrays can mutate.
 * No end-of-line characters, eg: semicolons, commas.
-* Everything is by value by default. Reference by using `&`.
+* Everything is by value by default. Reference by using `&`. Is this really a good idea? It sounds appealing to have everything aggressively minimise as much as possible in some circumstances. Perhaps that's what this language would be for. Maybe it is worth separating this idea from the syntax ideas though - they kind of stretch the language in two opposite directions. The syntax stuff could be for a more scripting focused language. The low level stuff could be a different language - mainly just an interface for WebAssembly.
 
 ## Stuff to experiment with
 Constants
