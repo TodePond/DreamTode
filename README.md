@@ -2,15 +2,14 @@
 Some ideas to test out:
 * Transpiles to WebAssembly.
 * Parentheses ONLY used for grouping together stuff. NOT used for arguments.
-* The parser can be modded with the `def` keyword.
-* First-class parameters in the form of "patterns".
+* The parser can be modded.
+* First-class parameters.
 * You can write some horrific-looking code with DreamTode and that's ok.
 * You can choose when a function gets done: run-time or compile-time.
-* No classes or constructors or methods or inheritance. Only functions and constants.
+* No classes or constructors or methods or inheritance. Only functions and data.
 * Arrays and Objects are the same thing, but there are still two different literals to help you write them.
 * No variables. Only constants. Arrays can mutate.
 * No end-of-line characters, eg: semicolons, commas.
-* Everything is by value by default. Reference by using `&`. Is this really a good idea? It sounds appealing to have everything aggressively minimise as much as possible in some circumstances. Perhaps that's what this language would be for. Maybe it is worth separating this idea from the syntax ideas though - they kind of stretch the language in two opposite directions. The syntax stuff could be for a more scripting focused language. The low level stuff could be a different language - mainly just an interface for WebAssembly.
 
 ## Stuff to experiment with
 Constants
@@ -25,62 +24,32 @@ let name: String = "Luke"
 let age: UInt8 = 26
 ```
 
-Structures
+Arrays
 ```
 let scores: UInt8[] = 5, 2, 7, 2
 scores[0]
 
 let luke: Any[] = [name = "Luke", age = 26]
 luke.name
-
-let Person: Any{} = {name, age}
-new Person "Luke", 26
 ```
 
 Functions
 ```
-let add = {left, right} => left + right
+let add = [left, right] => left + right
 add 3, 2
-```
-
-Structs
-```
-let Person = {name: String, age: UInt8}
-let luke = new Person "Luke", 26
 ```
 
 Conditions
 ```
-let age = 26
+let age = 27
 if age >= 18, print "You are an adult!"
 ```
 
 Loops
 ```
 let names = "Luke" "Bob" "Tim"
-for {name} of names, print "Hello $name!"
-for {i} in names, print "Hello $(names[i])!"
-```
-```
-loop names, {name} => print "Hello $name!"
-```
-
-Maps
-```
-let scores = 4, 6, 2, 5
-let doubledScores = map scores, {n} => n * 2
-```
-
-Operators
-```
-def {left, <"add">, right} => left + right
-3 add 2
-```
-
-Literals
-```
-def {<"'">, inner: </[^']*/>, <"'">} => inner
-print 'Hello world!'
+for names, [name] => print "Hello $name!"
+for 0 to names.length-1, [i] => print "Hello ${names(i)}!"
 ```
 
 Compile-Time
@@ -121,11 +90,6 @@ let scores = 2, 6, 3, 4
 Square brackets are ALWAYS an array (with named properties).
 ```
 let luke = [name = "Luke", age = 26]
-```
-
-Brace brackets are ALWAYS a pattern literal.
-```
-let args = {a: Number, b: Number}
 ```
 
 ## Arguments
