@@ -1,3 +1,5 @@
+This repo is very out-of-date. For the current spec, check out https://l2wilson94.gitbook.io/dreamtode 
+
 # DreamTode
 Some ideas to test out:
 * Transpiles to WebAssembly.
